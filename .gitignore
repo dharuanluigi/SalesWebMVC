@@ -364,3 +364,4 @@ FodyWeavers.xsd
 
 # Untrack appsettings of development
 appsettings-dev.json
+appsettings.json
