@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.EntityFrameworkCore;
 using SalesWebMVC.Data;
 
 namespace SalesWebMVC
@@ -32,7 +32,7 @@ namespace SalesWebMVC
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
             services.AddDbContext<SalesWebMVCContext>(options =>
-                    options.UseMySql(Configuration.GetConnectionString("SalesWebMVCContext"), 
+                    options.UseMySql(Configuration.GetConnectionString("SalesWebMVCContext"),
                                     builder => builder.MigrationsAssembly("SalesWebMVC")));
 
             services.AddScoped<SeedingService>();
