@@ -44,12 +44,29 @@ namespace SalesWebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpDelete]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete([FromQuery] int id)
+        public IActionResult Delete(int? id)
         {
-            Console.WriteLine(id);
-            return Redirect(nameof(Index));
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var seller = _sellerService.FinById(id.Value);
+            
+            if(seller == null)
+            {
+                return NotFound();
+            }
+
+            return View(seller);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id)
+        {
+            _sellerService.Delete(id);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
