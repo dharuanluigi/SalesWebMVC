@@ -18,12 +18,18 @@ namespace SalesWebMVC.Services
 
         public List<Seller> FindAll()
         {
-            return _context.Seller.ToList();
+            return _context.Seller.OrderBy(s => s.Name).ToList();
         }
 
         public void Insert(Seller seller)
         {
             _context.Add(seller);
+            _context.SaveChanges();
+        }
+
+        public void Delete(int id)
+        {
+            _context.Remove(id);
             _context.SaveChanges();
         }
     }
