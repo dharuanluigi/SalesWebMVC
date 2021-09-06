@@ -7,8 +7,8 @@ namespace SalesWebMVC.Models.Enums
 {
     public enum SaleStatus : byte
     {
-        Peding,
-        Billed,
-        Canceled
+        Peding = 1,
+        Billed = 2,
+        Canceled = 3
     }
 }
