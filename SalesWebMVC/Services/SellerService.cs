@@ -42,16 +42,16 @@ namespace SalesWebMVC.Services
             _context.SaveChanges();
         }
 
-        public void Update(Seller __seller)
+        public void Update(Seller seller)
         {
             try
             {                
-                if(!_context.Seller.Any(s => s.Id == __seller.Id))
+                if(!_context.Seller.Any(s => s.Id == seller.Id))
                 {
                     throw new NotFoundException("User not found");
                 }
 
-                _context.Update(__seller);
+                _context.Update(seller);
                 _context.SaveChanges();
             }
             catch(DbConcurrencyException e)

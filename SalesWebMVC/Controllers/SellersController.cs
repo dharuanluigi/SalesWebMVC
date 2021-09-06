@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using SalesWebMVC.Services;
 using SalesWebMVC.Models;
 using SalesWebMVC.Models.ViewModel;
+using SalesWebMVC.Models.ViewModels;
+using System.Diagnostics;
 
 namespace SalesWebMVC.Controllers
 {
@@ -53,7 +55,10 @@ namespace SalesWebMVC.Controllers
 
             if(seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new 
+                {
+                    message = "Seller not found"
+                });
             }
 
             return View(seller);
@@ -74,7 +79,10 @@ namespace SalesWebMVC.Controllers
 
             if(seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new
+                {
+                    message = "Seller not found"
+                });
             }
 
             return View(seller);
@@ -104,7 +112,10 @@ namespace SalesWebMVC.Controllers
 
             if(seller == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new 
+                {
+                    message = "Seller not found"
+                });
             }
 
             List<Department> departments = _departmentService.FindAll();
@@ -123,11 +134,25 @@ namespace SalesWebMVC.Controllers
         {
             if(id != seller.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new 
+                { 
+                    message = "Unrecognized Id"
+                });
             }
 
             _sellerService.Update(seller);
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+
+            return View(viewModel);
         }
     }
 }
