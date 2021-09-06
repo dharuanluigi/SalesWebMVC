@@ -8,6 +8,7 @@ using SalesWebMVC.Models;
 using SalesWebMVC.Models.ViewModel;
 using SalesWebMVC.Models.ViewModels;
 using System.Diagnostics;
+using SalesWebMVC.Services.Exceptions;
 
 namespace SalesWebMVC.Controllers
 {
@@ -73,8 +74,18 @@ namespace SalesWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _sellerService.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _sellerService.DeleteAsync(id);
+                return RedirectToAction(nameof(Index));
+            }
+            catch(IntegrityException)
+            {
+                return RedirectToAction(nameof(Error), new 
+                {
+                    message = "Seller can't be delete because has sales inside system"
+                });
+            }
         }
 
         [HttpGet]
