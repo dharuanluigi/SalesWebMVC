@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using SalesWebMVC.Data;
 using SalesWebMVC.Models;
 using Microsoft.EntityFrameworkCore;
+using SalesWebMVC.Services.Exceptions;
 
 namespace SalesWebMVC.Services
 {
@@ -36,9 +37,27 @@ namespace SalesWebMVC.Services
 
         public void Delete(int id)
         {
-            var seller = _context.Seller.Find(id);
+            var seller = FinById(id);
             _context.Seller.Remove(seller);
             _context.SaveChanges();
+        }
+
+        public void Update(Seller __seller)
+        {
+            try
+            {                
+                if(!_context.Seller.Any(s => s.Id == __seller.Id))
+                {
+                    throw new NotFoundException("User not found");
+                }
+
+                _context.Update(__seller);
+                _context.SaveChanges();
+            }
+            catch(DbConcurrencyException e)
+            {
+                throw new DbConcurrencyException(e.Message);
+            }
         }
     }
 }

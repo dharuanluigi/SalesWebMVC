@@ -49,7 +49,7 @@ namespace SalesWebMVC.Controllers
         [HttpGet]
         public IActionResult Delete(int? id)
         {
-            var seller = VerifierUserById(id);
+            var seller = GetUserById(id);
 
             if(seller == null)
             {
@@ -70,7 +70,7 @@ namespace SalesWebMVC.Controllers
         [HttpGet]
         public IActionResult Details(int? id)
         {
-            var seller = VerifierUserById(id);
+            var seller = GetUserById(id);
 
             if(seller == null)
             {
@@ -80,7 +80,7 @@ namespace SalesWebMVC.Controllers
             return View(seller);
         }
 
-        private Seller VerifierUserById(int? id)
+        private Seller GetUserById(int? id)
         {
             if (id == null)
             {
@@ -95,6 +95,39 @@ namespace SalesWebMVC.Controllers
             }
 
             return seller;
+        }
+
+        [HttpGet]
+        public IActionResult Edit(int? id)
+        {
+            var seller = GetUserById(id);
+
+            if(seller == null)
+            {
+                return NotFound();
+            }
+
+            List<Department> departments = _departmentService.FindAll();
+            SellerFormViewModel viewModel = new SellerFormViewModel
+            {
+                Seller = seller,
+                Departments = departments
+            };
+
+            return View(viewModel);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, Seller seller)
+        {
+            if(id != seller.Id)
+            {
+                return BadRequest();
+            }
+
+            _sellerService.Update(seller);
+            return RedirectToAction(nameof(Index));
         }
     }
 }
