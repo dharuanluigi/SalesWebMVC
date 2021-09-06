@@ -23,16 +23,16 @@ namespace SalesWebMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _sellerService.FindAll();
+            var list = await _sellerService.FindAllAsync();
             return View(list);
         }
 
         [HttpGet]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewModel
             {
                 Departments = departments
@@ -42,21 +42,21 @@ namespace SalesWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Seller seller)
+        public async Task<IActionResult> Create(Seller seller)
         {
             if(!ModelState.IsValid)
             {
-                return View(InvalidState(seller));
+                return View(InvalidStateAsync(seller));
             }
 
-            _sellerService.Insert(seller);
+            await  _sellerService.InsertAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            var seller = GetUserById(id);
+            var seller = await GetUserByIdAsync(id);
 
             if(seller == null)
             {
@@ -71,16 +71,16 @@ namespace SalesWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _sellerService.Delete(id);
+            await _sellerService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
         [HttpGet]
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            var seller = GetUserById(id);
+            var seller = await GetUserByIdAsync(id);
 
             if(seller == null)
             {
@@ -93,14 +93,14 @@ namespace SalesWebMVC.Controllers
             return View(seller);
         }
 
-        private Seller GetUserById(int? id)
+        private async Task<Seller> GetUserByIdAsync(int? id)
         {
             if (id == null)
             {
                 return null;
             }
 
-            var seller = _sellerService.FinById(id.Value);
+            var seller = await _sellerService.FinByIdAsync(id.Value);
 
             if (seller == null)
             {
@@ -110,9 +110,9 @@ namespace SalesWebMVC.Controllers
             return seller;
         }
 
-        private SellerFormViewModel InvalidState(Seller seller)
+        private async Task<SellerFormViewModel> InvalidStateAsync(Seller seller)
         {
-            var departments = _departmentService.FindAll();
+            var departments = await _departmentService.FindAllAsync();
             var viewModel = new SellerFormViewModel
             {
                 Seller = seller,
@@ -123,9 +123,9 @@ namespace SalesWebMVC.Controllers
         }
 
         [HttpGet]
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            var seller = GetUserById(id);
+            var seller = await GetUserByIdAsync (id);
 
             if(seller == null)
             {
@@ -135,7 +135,7 @@ namespace SalesWebMVC.Controllers
                 });
             }
 
-            List<Department> departments = _departmentService.FindAll();
+            List<Department> departments = await _departmentService.FindAllAsync();
             SellerFormViewModel viewModel = new SellerFormViewModel
             {
                 Seller = seller,
@@ -147,11 +147,11 @@ namespace SalesWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Seller seller)
+        public async Task<IActionResult> Edit(int id, Seller seller)
         {
             if(!ModelState.IsValid)
             {
-                return View(InvalidState(seller));
+                return View(await InvalidStateAsync(seller));
             }
 
             if (id != seller.Id)
@@ -162,7 +162,7 @@ namespace SalesWebMVC.Controllers
                 });
             }
 
-            _sellerService.Update(seller);
+            await _sellerService.UpdateAsync(seller);
             return RedirectToAction(nameof(Index));
         }
 

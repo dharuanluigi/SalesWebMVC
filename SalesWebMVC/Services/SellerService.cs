@@ -18,41 +18,42 @@ namespace SalesWebMVC.Services
             _context = context;
         }
 
-        public List<Seller> FindAll()
+        public async Task<List<Seller>> FindAllAsync()
         {
-            return _context.Seller.OrderBy(s => s.Name).ToList();
+            return await _context.Seller.OrderBy(s => s.Name).ToListAsync();
         }
 
-        public void Insert(Seller seller)
+        public async Task InsertAsync(Seller seller)
         {
             _context.Add(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public Seller FinById(int id)
+        public async Task<Seller> FinByIdAsync(int id)
         {
             // include makes like join
-            return _context.Seller.Include(s => s.Department).FirstOrDefault(s => s.Id == id);
+            return await _context.Seller.Include(s => s.Department).FirstOrDefaultAsync(s => s.Id == id);
         }
 
-        public void Delete(int id)
+        public async Task DeleteAsync(int id)
         {
-            var seller = FinById(id);
+            var seller = await FinByIdAsync(id);
             _context.Seller.Remove(seller);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
         }
 
-        public void Update(Seller seller)
+        public async Task UpdateAsync(Seller seller)
         {
             try
-            {                
-                if(!_context.Seller.Any(s => s.Id == seller.Id))
+            {
+                bool hasAny = await _context.Seller.AnyAsync(s => s.Id == seller.Id);
+                if (!hasAny)
                 {
                     throw new NotFoundException("User not found");
                 }
 
                 _context.Update(seller);
-                _context.SaveChanges();
+                await _context.SaveChangesAsync();
             }
             catch(DbConcurrencyException e)
             {
