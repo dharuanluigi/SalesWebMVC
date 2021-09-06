@@ -44,6 +44,11 @@ namespace SalesWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(Seller seller)
         {
+            if(!ModelState.IsValid)
+            {
+                return View(InvalidState(seller));
+            }
+
             _sellerService.Insert(seller);
             return RedirectToAction(nameof(Index));
         }
@@ -105,6 +110,18 @@ namespace SalesWebMVC.Controllers
             return seller;
         }
 
+        private SellerFormViewModel InvalidState(Seller seller)
+        {
+            var departments = _departmentService.FindAll();
+            var viewModel = new SellerFormViewModel
+            {
+                Seller = seller,
+                Departments = departments
+            };
+
+            return viewModel;
+        }
+
         [HttpGet]
         public IActionResult Edit(int? id)
         {
@@ -132,10 +149,15 @@ namespace SalesWebMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Edit(int id, Seller seller)
         {
-            if(id != seller.Id)
+            if(!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(Error), new 
-                { 
+                return View(InvalidState(seller));
+            }
+
+            if (id != seller.Id)
+            {
+                return RedirectToAction(nameof(Error), new
+                {
                     message = "Unrecognized Id"
                 });
             }
