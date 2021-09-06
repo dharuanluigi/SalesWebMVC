@@ -20,12 +20,14 @@ namespace SalesWebMVC.Controllers
             _departmentService = departmentService;
         }
 
+        [HttpGet]
         public IActionResult Index()
         {
             var list = _sellerService.FindAll();
             return View(list);
         }
 
+        [HttpGet]
         public IActionResult Create()
         {
             var departments = _departmentService.FindAll();
@@ -44,15 +46,11 @@ namespace SalesWebMVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
+        [HttpGet]
         public IActionResult Delete(int? id)
         {
-            if(id == null)
-            {
-                return NotFound();
-            }
+            var seller = VerifierUserById(id);
 
-            var seller = _sellerService.FinById(id.Value);
-            
             if(seller == null)
             {
                 return NotFound();
@@ -67,6 +65,36 @@ namespace SalesWebMVC.Controllers
         {
             _sellerService.Delete(id);
             return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public IActionResult Details(int? id)
+        {
+            var seller = VerifierUserById(id);
+
+            if(seller == null)
+            {
+                return NotFound();
+            }
+
+            return View(seller);
+        }
+
+        private Seller VerifierUserById(int? id)
+        {
+            if (id == null)
+            {
+                return null;
+            }
+
+            var seller = _sellerService.FinById(id.Value);
+
+            if (seller == null)
+            {
+                return null;
+            }
+
+            return seller;
         }
     }
 }
