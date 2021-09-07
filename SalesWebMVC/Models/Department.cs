@@ -21,18 +21,18 @@ namespace SalesWebMVC.Models
 
         public Department(int id, string name)
         {
-            this.Id = id;
-            this.Name = name;
+            Id = id;
+            Name = name;
         }
 
         public void AddSeller(Seller seller)
         {
-            this.Sellers.Add(seller);
+            Sellers.Add(seller);
         }
 
         public double TotalSales(DateTime initial, DateTime final)
         {
-            return this.Sellers.Sum(s => s.TotalSales(initial, final));
+            return Sellers.Sum(s => s.TotalSales(initial, final));
         }
     }
 }

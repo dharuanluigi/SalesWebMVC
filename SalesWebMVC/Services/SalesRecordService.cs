@@ -23,21 +23,32 @@ namespace SalesWebMVC.Services
             var result = from sales in _context.SalesRecord select sales;
 
             // filtering result from query if dates has values
-            if(minDate.HasValue)
-            {
-                result = result.Where(s => s.Date >= minDate.Value);
-            }
+            result = minDate != null ? result.Where(s => s.Date >= minDate.Value) : result;
 
-            if(maxDate.HasValue)
-            {
-                result = result.Where(s => s.Date <= maxDate.Value);
-            }
+            result = maxDate != null ? result.Where(s => s.Date <= maxDate.Value) : result;
 
-            // multiples joins
             return await result
                 .Include(s => s.Seller)
                 .Include(s => s.Seller.Department)
                 .OrderByDescending(s => s.Date)
+                .ToListAsync();
+        }
+
+        public async Task<List<IGrouping<Department, SalesRecord>>> FindByGroupingAsync(DateTime? minDate, DateTime? maxDate)
+        {
+            // IQueryble -> query constructory
+            var result = from sales in _context.SalesRecord select sales;
+
+            // filtering result from query if dates has values
+            result = minDate != null ? result.Where(s => s.Date >= minDate.Value) : result;
+
+            result = maxDate != null ? result.Where(s => s.Date <= maxDate.Value) : result;
+
+            return await result
+                .Include(s => s.Seller)
+                .Include(s => s.Seller.Department)
+                .OrderByDescending(s => s.Date)
+                .GroupBy(s => s.Seller.Department)
                 .ToListAsync();
         }
     }

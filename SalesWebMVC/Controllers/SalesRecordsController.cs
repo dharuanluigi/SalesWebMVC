@@ -33,9 +33,15 @@ namespace SalesWebMVC.Controllers
             return View(result);
         }
 
-        public IActionResult GroupingSearch()
+        public async Task<IActionResult> GroupingSearch(DateTime? minDate, DateTime? maxDate)
         {
-            return View();
+            minDate = minDate ?? new DateTime(DateTime.Now.Year, 1, 1);
+            maxDate = maxDate ?? DateTime.Now;
+
+            ViewData["minDate"] = minDate.Value.ToString("yyyy-MM-dd");
+            ViewData["maxDate"] = maxDate.Value.ToString("yyyy-MM-dd");
+            var result = await _salesRecordService.FindByGroupingAsync(minDate, maxDate);
+            return View(result);
         }
     }
 }
