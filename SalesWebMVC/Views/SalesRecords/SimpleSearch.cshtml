@@ -29,7 +29,8 @@
 
 <div class="panel panel-primary">
     <div class="panel-heading">
-        <h3 class="panel-title">Total sales amount: @Model.Sum(sale => sale.Amount).ToString("F2")</h3>
+        <h3 class="panel-title">Total sales amount: $@Model.Sum(sale => sale.Amount).ToString("F2")</h3>
+        <h3 class="panel-title">Total quantity sales: @Model.Count().ToString()</h3>
     </div>
 
     <div  class="panel-body">
