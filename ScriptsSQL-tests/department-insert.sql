@@ -1,0 +1,3 @@
+INSERT IGNORE INTO `department` (`Name`) VALUES ("Legal Department"),("Research and Development"),("Advertising"),("Payroll"),("Customer Relations"),("Accounting"),("Media Relations"),("Human Resources");
+INSERT IGNORE INTO `department` (`Name`) VALUES ("Public Relations"),("Sales and Marketing"),("Quality Assurance"),("Tech Support"),("Finances");
+INSERT IGNORE INTO `department` (`Name`) VALUES ("Customer Service"),("Asset Management");
